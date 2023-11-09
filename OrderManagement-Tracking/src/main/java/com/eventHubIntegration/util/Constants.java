@@ -1,4 +1,4 @@
-package com.orderManagement.util;
+package com.eventHubIntegration.util;
 
 public class Constants {
 	
