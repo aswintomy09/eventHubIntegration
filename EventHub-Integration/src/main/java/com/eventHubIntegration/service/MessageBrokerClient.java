@@ -2,14 +2,25 @@ package com.eventHubIntegration.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.stereotype.Service;
 
 import com.eventHubIntegration.model.Event;
 import com.eventHubIntegration.model.Microservice;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Service
 public class MessageBrokerClient {
 	
-private static final Logger LOGGER = LoggerFactory.getLogger(MessageBrokerClient.class);
+	@Autowired
+    private KafkaTemplate<String, Event> kafkaTemplate;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MessageBrokerClient.class);
     
     // Add necessary dependencies for interacting with the message broker
     // e.g., RabbitTemplate for RabbitMQ or KafkaTemplate for Apache Kafka
@@ -30,27 +41,44 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MessageBrokerClient
     }
 
     private Message<Event> createMessage(Event event) {
-		return null;
-        // Implement conversion logic to convert the event to a message format supported by the message broker
-        // e.g., Using a MessageConverter or custom serialization
-        
-        // Return the converted message
+        // Convert the event to a message format supported by the message broker
+        // String eventPayload = convertEventToString(event);
+
+        // Create a new Message with the event payload
+        Message<Event> message = MessageBuilder
+                .withPayload(event)
+                .build();
+
+        // Return the Message with the event payload
+        return message;
     }
 
     private void sendMessage(String topic, Message<Event> message) {
-        // Implement sending logic to publish the message to the specified topic in the message broker
-        // e.g., Using RabbitTemplate in case of RabbitMQ or KafkaTemplate in case of Apache Kafka
+    	Event event = message.getPayload();
+        
+        // Publish the event to the specified topic in the message broker using KafkaTemplate
+        kafkaTemplate.send(topic, event);
     }
-
-    public void subscribeToTopic(String topic, Microservice microservice) {
+    
+    @KafkaListener(topicPattern = "${message.broker.topic}")
+    public void subscribeToTopic(Event event) {
         try {
             // Implement logic to subscribe the microservice to the specified topic in the message broker
-            // e.g., Using RabbitListener or KafkaListener annotations for message consumption
+            // KafkaListener annotations for message consumption
+        	
             
-            LOGGER.info("Microservice '{}' subscribed to topic: {}", microservice.getServiceName(), topic);
+        	 LOGGER.info("Received event: {}", event);
 
-        } catch (Exception e) {
-            LOGGER.error("Failed to subscribe microservice '{}' to topic: {}", microservice.getServiceName(), topic, e);
+             // Process the event as needed
+             // ...
+             
+         } catch (Exception e) {
+             LOGGER.error("Failed to process event: {}", event, e);
         }
     }
+
+	public void subscribeToTopic(String topic, Long microserviceId) {
+		// TODO Auto-generated method stub
+		
+	}
 }

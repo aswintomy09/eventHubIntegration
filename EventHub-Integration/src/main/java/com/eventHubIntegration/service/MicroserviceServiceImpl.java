@@ -21,7 +21,6 @@ public class MicroserviceServiceImpl implements MicroserviceService {
 		try {
 		Microservice microservice = new Microservice();
         microservice.setServiceName(microserviceDetails.getServiceName());
-        microservice.setTopics(microserviceDetails.getTopics());
         microservice.setCommunicationEndpoint(microserviceDetails.getCommunicationEndpoint());
 
         Microservice savedMicroservice = microserviceRepository.save(microservice);

@@ -2,6 +2,9 @@ package com.eventHubIntegration.model;
 
 import java.util.List;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,10 +22,10 @@ public class Microservice {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+	@Column(name = "Service_name")
 	private String serviceName;
-
-	private List<String> topics;
-
+	
+	@Column(name = "Endpoint")
 	private String communicationEndpoint;
 
 }
