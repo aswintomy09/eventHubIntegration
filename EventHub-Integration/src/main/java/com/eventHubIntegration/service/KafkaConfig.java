@@ -18,7 +18,7 @@ import com.eventHubIntegration.model.Event;
 @Configuration
 public class KafkaConfig {
 	
-	@Value("${spring.kafka.bootstrap-servers}")
+	@Value("${spring.kafka.consumer.bootstrap-servers}")
     private String bootstrapServers;
 
     @Value("${spring.kafka.consumer.group-id}")
