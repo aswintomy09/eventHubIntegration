@@ -1,6 +1,8 @@
 package com.eventHubIntegration.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +20,10 @@ public class EventController {
 	@Autowired
 	private EventService eventService;
 	
-	@PostMapping("/publish")
-    public void publishEvent(@RequestBody Event event) {
-        eventService.publishEvent(event);
+	@PostMapping("/{topic}")
+    public ResponseEntity<Event> publishEvent(@PathVariable("topic") String topic, @RequestBody Event event) {
+        Event publishedEvent = eventService.publishEvent(topic, event);
+        return ResponseEntity.ok(publishedEvent);
     }
 	
 }

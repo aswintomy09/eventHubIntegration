@@ -4,6 +4,6 @@ import com.eventHubIntegration.model.Event;
 
 public interface EventService {
 
-	void publishEvent(Event event);
+	Event publishEvent(String topic, Event event);
 
 }
