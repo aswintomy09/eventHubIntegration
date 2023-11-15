@@ -21,6 +21,9 @@ public class Microservice {
 	@Column(name = "Service_name")
 	private String serviceName;
 	
+	@Column(name = "Topic")
+	private String topic;
+	
 	@Column(name = "Endpoint")
 	private String communicationEndpoint;
 

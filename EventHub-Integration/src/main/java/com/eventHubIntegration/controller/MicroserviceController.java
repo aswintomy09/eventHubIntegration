@@ -1,13 +1,15 @@
 package com.eventHubIntegration.controller;
 
+import static com.eventHubIntegration.util.Constants.MICROSERVICE_REGISTRATION_SUCCESS;
+import static com.eventHubIntegration.util.Constants.MICROSERVICE_URL_PATH;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import static com.eventHubIntegration.util.Constants.*;
 
 import com.eventHubIntegration.exception.MicroserviceRegistrationException;
 import com.eventHubIntegration.model.MicroserviceDetails;
@@ -21,8 +23,14 @@ public class MicroserviceController {
     private MicroserviceService microserviceService;
 
     @PostMapping("/register")
-    public ResponseEntity<Long> registerMicroservice(@RequestBody MicroserviceDetails microserviceDetails) throws MicroserviceRegistrationException {
-        Long microserviceId = microserviceService.registerMicroservice(microserviceDetails);
-        return ResponseEntity.ok(microserviceId);
+    public ResponseEntity<String> registerMicroservice(@RequestBody MicroserviceDetails microserviceDetails) throws MicroserviceRegistrationException {
+        microserviceService.registerMicroservice(microserviceDetails);
+        return ResponseEntity.ok(MICROSERVICE_REGISTRATION_SUCCESS);
+    }
+    
+    @GetMapping("/list")
+    public ResponseEntity<String> getSubscribedMicroservices(@RequestBody String topic) throws MicroserviceRegistrationException {
+        String subscribedMicroservice= microserviceService.getSubscribedMicroservices(topic);
+        return ResponseEntity.ok(subscribedMicroservice);
     }
 }

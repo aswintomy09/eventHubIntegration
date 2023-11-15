@@ -2,6 +2,9 @@ package com.eventHubIntegration.service;
 
 import static com.eventHubIntegration.util.Constants.MICROSERVICE_REGISTRATION_FAILED;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,19 +18,26 @@ public class MicroserviceServiceImpl implements MicroserviceService {
 	
 	@Autowired
     private MicroserviceRepository microserviceRepository;
+	
+	private final Map<String, String> subscribedTopics = new HashMap<>();
     
 	@Override
-	public Long registerMicroservice(MicroserviceDetails microserviceDetails) throws MicroserviceRegistrationException {
+	public Microservice registerMicroservice(MicroserviceDetails microserviceDetails) throws MicroserviceRegistrationException {
 		try {
 		Microservice microservice = new Microservice();
         microservice.setServiceName(microserviceDetails.getServiceName());
+        microservice.setTopic(microserviceDetails.getTopic());
         microservice.setCommunicationEndpoint(microserviceDetails.getCommunicationEndpoint());
 
         Microservice savedMicroservice = microserviceRepository.save(microservice);
-        return savedMicroservice.getId();
+        return savedMicroservice;
 		} catch (Exception e) {
             throw new MicroserviceRegistrationException(MICROSERVICE_REGISTRATION_FAILED, e);
         }
 	}
+	
+	public String getSubscribedMicroservices(String topic) {
+        return subscribedTopics.getOrDefault(topic, "");
+    }
 
 }
