@@ -8,6 +8,6 @@ public interface MicroserviceService {
 
 	Microservice registerMicroservice(MicroserviceDetails microserviceDetails) throws MicroserviceRegistrationException;
 
-	String getSubscribedMicroservices(String topic);
+	Microservice getSubscribedMicroservices(String topic);
 
 }

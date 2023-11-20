@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eventHubIntegration.exception.MicroserviceRegistrationException;
+import com.eventHubIntegration.model.Microservice;
 import com.eventHubIntegration.model.MicroserviceDetails;
 import com.eventHubIntegration.service.MicroserviceService;
 
@@ -29,8 +31,8 @@ public class MicroserviceController {
     }
     
     @GetMapping("/list")
-    public ResponseEntity<String> getSubscribedMicroservices(@RequestBody String topic) throws MicroserviceRegistrationException {
-        String subscribedMicroservice= microserviceService.getSubscribedMicroservices(topic);
-        return ResponseEntity.ok(subscribedMicroservice);
+    public Microservice getSubscribedMicroservices(@RequestParam String topic) throws MicroserviceRegistrationException {
+        Microservice subscribedMicroservice= microserviceService.getSubscribedMicroservices(topic);
+        return subscribedMicroservice;
     }
 }

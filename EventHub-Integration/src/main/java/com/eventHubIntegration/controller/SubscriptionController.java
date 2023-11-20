@@ -19,9 +19,9 @@ public class SubscriptionController {
 	@Autowired
     private SubscriptionService subscriptionService;
 
-    @PostMapping("/{topic}")
-    public ResponseEntity<Subscription> subscribe(@PathVariable("topic") String topic, @RequestBody Subscription subscription) throws AlreadySubscribedException {
-        Subscription newSubscription = subscriptionService.subscribe(topic, subscription);
+    @PostMapping("/subscribe")
+    public ResponseEntity<Subscription> subscribe(@RequestBody Subscription subscription) throws AlreadySubscribedException {
+        Subscription newSubscription = subscriptionService.subscribe(subscription);
         return ResponseEntity.ok(newSubscription);
     }
 }

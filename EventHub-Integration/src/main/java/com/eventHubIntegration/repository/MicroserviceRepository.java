@@ -8,4 +8,6 @@ import com.eventHubIntegration.model.Microservice;
 @Repository
 public interface MicroserviceRepository extends JpaRepository<Microservice, Long> {
 
+	Microservice getSubscribedMicroservicesByTopic(String topic);
+
 }

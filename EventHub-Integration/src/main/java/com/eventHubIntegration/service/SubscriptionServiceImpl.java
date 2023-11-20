@@ -16,9 +16,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Autowired
     private SubscriptionRepository subscriptionRepository;
 
-    public Subscription subscribe(String topic, Subscription subscription) throws AlreadySubscribedException {
+    public Subscription subscribe(Subscription subscription) throws AlreadySubscribedException {
         // Check if microservice is already subscribed to the topic
-        if (subscriptionRepository.existsByMicroserviceIdAndTopic(subscription.getMicroserviceId(), topic)) {
+        if (subscriptionRepository.existsByMicroserviceIdAndTopic(subscription.getMicroserviceId(), subscription.getTopic())) {
             throw new AlreadySubscribedException("Microservice is already subscribed to the topic");
         }
 
@@ -26,10 +26,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         // ...
 
         // Subscribe the microservice to the topic in the message broker
-        messageBrokerClient.subscribeToTopic(topic, subscription.getMicroserviceId());
+        messageBrokerClient.subscribeToTopic(subscription.getTopic(), subscription.getMicroserviceId());
 
         // Save the subscription
-        subscription.setTopic(topic);
+        subscription.setTopic(subscription.getTopic());
         subscriptionRepository.save(subscription);
 
         return subscription;

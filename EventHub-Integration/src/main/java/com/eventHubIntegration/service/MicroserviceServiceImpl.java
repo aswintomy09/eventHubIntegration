@@ -36,8 +36,8 @@ public class MicroserviceServiceImpl implements MicroserviceService {
         }
 	}
 	
-	public String getSubscribedMicroservices(String topic) {
-        return subscribedTopics.getOrDefault(topic, "");
+	public Microservice getSubscribedMicroservices(String topic) {
+        return microserviceRepository.getSubscribedMicroservicesByTopic(topic);
     }
 
 }
