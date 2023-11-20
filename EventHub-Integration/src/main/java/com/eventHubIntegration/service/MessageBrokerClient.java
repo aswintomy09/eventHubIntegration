@@ -1,13 +1,13 @@
 package com.eventHubIntegration.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import com.eventHubIntegration.model.Event;
+import com.eventHubIntegration.model.Subscription;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 public class MessageBrokerClient {
 	
 	@Autowired
-    private KafkaTemplate<String, Event> kafkaTemplate;
+    private KafkaTemplate<String, Event> kafkaTemplateEvent;
+	
+	@Autowired
+    private KafkaTemplate<String, Subscription> kafkaTemplateSubscription;
     
     // Add necessary dependencies for interacting with the message broker
     // e.g., RabbitTemplate for RabbitMQ or KafkaTemplate for Apache Kafka
@@ -53,28 +56,16 @@ public class MessageBrokerClient {
     	Event event = message.getPayload();
         
         // Publish the event to the specified topic in the message broker using KafkaTemplate
-        kafkaTemplate.send(topic, event);
-    }
-    
-    @KafkaListener(topicPattern = "${message.broker.topic}")
-    public void subscribeToTopic(Event event) {
-        try {
-            // Implement logic to subscribe the microservice to the specified topic in the message broker
-            // KafkaListener annotations for message consumption
-        	
-            
-        	 log.info("Received event: {}", event);
-
-             // Process the event as needed
-             // ...
-             
-         } catch (Exception e) {
-             log.error("Failed to process event: {}", event, e);
-        }
+    	kafkaTemplateEvent.send(topic, event);
     }
 
 	public void subscribeToTopic(String topic, Long microserviceId) {
-		// TODO Auto-generated method stub
-		
+		 Subscription subscription = new Subscription();
+		 subscription.setMicroserviceId(microserviceId);
+		 subscription.setTopic(topic);
+
+	        // Publish the subscription to the Kafka topic
+		 kafkaTemplateSubscription.send(topic, subscription);
+		 log.info("Subscribed microservice with ID {} to topic {}", microserviceId, topic);
 	}
 }
